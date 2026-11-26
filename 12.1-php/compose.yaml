@@ -1,0 +1,16 @@
+# ~/stacks/php/compose.yaml (VPS) - P12 punto 12.1
+# Construye la imagen del Dockerfile de esta carpeta y la deja detras de NPM (php.macki4all.es).
+services:
+  php:
+    build: .
+    image: p12/debian-php:1.0
+    container_name: debian-php
+    restart: unless-stopped
+    expose:
+      - "80"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

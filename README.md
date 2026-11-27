@@ -30,7 +30,9 @@ En la imagen LAMP, la base de datos funciona **en segundo plano** dentro del con
 │   ├── web/qr.png        # QR a este repositorio
 │   ├── compose.yaml
 │   └── .env.ejemplo      # la contraseña real NO se sube
-└── 12-vps_desplegar.sh
+├── 12-vps_desplegar.sh
+├── 12.3-pc_generar_qr.py   # genera el QR (ver apartado QR)
+└── 12.3-qr_github.png
 ```
 
 ---
@@ -113,3 +115,35 @@ curl -sI https://lamp.macki4all.es | head -3
 ![QR](12.2-lamp/web/qr.png)
 
 El QR lleva a este repositorio. También aparece en la propia página LAMP.
+
+### Cómo se ha generado
+
+El QR se genera con la librería de Python **segno**, ejecutando el script `12.3-pc_generar_qr.py` en el PC:
+
+```bash
+pip install segno
+python 12.3-pc_generar_qr.py
+```
+
+| Parámetro | Qué hace |
+|---|---|
+| `segno.make(URL, error="m")` | Codifica la URL del repositorio. Usa corrección de errores **M**, así que se sigue leyendo aunque esté dañado un 15 % del código |
+| `scale=8` | Cada módulo (cuadradito) mide 8 px |
+| `border=2` | Margen blanco que la cámara necesita para detectarlo |
+
+Salen dos ficheros:
+- `12.2-lamp/web/qr.png`: el Dockerfile lo mete en la imagen con `COPY web/ /var/www/html/`;
+- `12.3-qr_github.png`: más grande, para la documentación.
+
+En la página aparece dentro de un enlace: se puede **escanear** con el móvil o **pulsar**.
+
+```html
+<a href="https://github.com/Santy0408/p12-lamp-docker"><img src="qr.png" alt="QR"></a>
+```
+
+En Linux se puede hacer lo mismo con `qrencode`:
+
+```bash
+sudo apt install -y qrencode
+qrencode -o qr.png -s 8 -l M "https://github.com/Santy0408/p12-lamp-docker"
+```
